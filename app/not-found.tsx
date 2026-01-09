@@ -1,11 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import styled from "@emotion/styled";
-
-const Section = styled.div(() => ({
-  marginTop: 20,
-}));
+import { Section } from "./components/Section";
 
 export default function NotFound() {
   return (

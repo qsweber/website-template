@@ -65,7 +65,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <meta name="theme-color" content="#000000" />
         <meta
           name="description"
-          content="Web site created using create-react-app"
+          content="A personal website template built with Next.js"
         />
         <link rel="apple-touch-icon" href="/logo192.png" />
         <link rel="manifest" href="/manifest.json" />
