@@ -26,7 +26,7 @@ jobs:
           node-version: 22
       - run: npm install
       - run: npm run build
-      - run: zip -r build.zip build/*
+      - run: zip -r build.zip out/*
       - uses: actions/upload-artifact@v4
         with:
           name: build
@@ -55,9 +55,9 @@ jobs:
       - uses: actions/download-artifact@v2
         with:
           name: build
-      - run: unzip build.zip # puts it into top level folder "build"
+      - run: unzip build.zip # puts it into top level folder "out"
       - run: pip install awscli
-      - run: aws s3 sync --acl public-read --delete ./build ${{ secrets.DEV_S3_BUCKET }}
+      - run: aws s3 sync --acl public-read --delete ./out ${{ secrets.DEV_S3_BUCKET }}
       - run: aws configure set preview.cloudfront true
       - run: aws cloudfront create-invalidation --distribution-id ${{ secrets.DEV_CLOUDFRONT_DISTRIBUTION_ID }} --paths '/*'
     env:
@@ -71,9 +71,9 @@ jobs:
       - uses: actions/download-artifact@v2
         with:
           name: build
-      - run: unzip build.zip # puts it into top level folder "build"
+      - run: unzip build.zip # puts it into top level folder "out"
       - run: pip install awscli
-      - run: aws s3 sync --acl public-read --delete ./build ${{ secrets.S3_BUCKET }}
+      - run: aws s3 sync --acl public-read --delete ./out ${{ secrets.S3_BUCKET }}
       - run: aws configure set preview.cloudfront true
       - run: aws cloudfront create-invalidation --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} --paths '/*'
     env:

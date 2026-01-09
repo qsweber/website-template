@@ -24,6 +24,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "test": "echo \"No tests configured\" && exit 0"
   }
 }
