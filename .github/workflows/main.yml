@@ -52,7 +52,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [test, build, infra]
     steps:
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v4
         with:
           name: build
       - run: unzip build.zip # puts it into top level folder "out"
@@ -68,7 +68,7 @@ jobs:
     needs: [test, build, infra]
     if: github.event_name == 'push'
     steps:
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v4
         with:
           name: build
       - run: unzip build.zip # puts it into top level folder "out"
