@@ -1,46 +1,56 @@
-# Getting Started with Create React App
+# Website Template
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A personal website template built with [Next.js](https://nextjs.org/) and configured for static site generation.
+
+## Features
+
+- Built with Next.js 14 App Router
+- Static site export (no server required)
+- TypeScript support
+- Emotion CSS-in-JS for styling
+- Responsive design
 
 ## Available Scripts
 
 In the project directory, you can run:
 
-### `npm start`
+### `npm run dev`
 
-Runs the app in the development mode.\
+Runs the app in development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-The page will reload if you make edits.\
+The page will hot-reload if you make edits.\
 You will also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
 ### `npm run build`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Builds the app for production and exports it as a static site to the `out` folder.\
+The site is fully static with all pages pre-rendered at build time.
 
-The build is minified and the filenames include the hashes.\
+The build is optimized for the best performance.\
 Your app is ready to be deployed!
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### `npm start`
 
-### `npm run eject`
+Starts the Next.js production server locally.\
+Note: For static hosting, deploy the contents of the `out` folder instead.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+## Deployment
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+This site is configured for static export. After running `npm run build`, the static files will be in the `out` directory.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+You can deploy these files to any static hosting service:
+- AWS S3 + CloudFront
+- Vercel
+- Netlify
+- GitHub Pages
+- Any other static hosting provider
 
 ## Learn More
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+To learn more about Next.js, check out the following resources:
+
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
 To learn React, check out the [React documentation](https://reactjs.org/).
