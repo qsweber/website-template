@@ -1,5 +1,7 @@
 import * as aws from "@pulumi/aws";
 import * as pulumi from "@pulumi/pulumi";
+import * as synced from "@pulumi/synced-folder";
+import * as path from "path";
 
 const config = new pulumi.Config();
 const bucketNameAndUrl = config.require("bucket");
@@ -68,6 +70,19 @@ const exampleBucketOwnershipControls = new aws.s3.BucketOwnershipControls(
     rule: {
       objectOwnership: "ObjectWriter",
     },
+  },
+);
+
+// Sync the built files to S3 (assumes out/ directory already exists from build step)
+const bucketFolder = new synced.S3BucketFolder(
+  `${bucketNameAndUrl}-synced-folder`,
+  {
+    path: path.join(__dirname, "..", "out"),
+    bucketName: bucket.bucket,
+    acl: "public-read",
+  },
+  {
+    dependsOn: [publicAccessBlock, bucketPolicy],
   },
 );
 
@@ -154,5 +169,6 @@ export const bucketPolicyUrn = bucketPolicy.urn;
 export const exampleBucketOwnershipControlsUrn =
   exampleBucketOwnershipControls.urn;
 export const distributionUrn = distribution.urn;
+export const distributionId = distribution.id;
 export const zoneUrn = zone.urn;
 export const cNameRecordUrn = cNameRecord.urn;
