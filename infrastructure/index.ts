@@ -82,7 +82,11 @@ const bucketFolder = new synced.S3BucketFolder(
     acl: "public-read",
   },
   {
-    dependsOn: [publicAccessBlock, bucketPolicy],
+    dependsOn: [
+      publicAccessBlock,
+      bucketPolicy,
+      exampleBucketOwnershipControls,
+    ],
   },
 );
 
