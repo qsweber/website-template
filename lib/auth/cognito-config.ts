@@ -12,8 +12,8 @@
 
 export const cognitoConfig = {
   region: process.env.NEXT_PUBLIC_COGNITO_REGION || "us-west-2",
-  userPoolId: process.env.NEXT_PUBLIC_COGNITO_USER_POOL_ID || "",
-  clientId: process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID || "",
+  userPoolId: process.env.NEXT_PUBLIC_COGNITO_USER_POOL_ID,
+  clientId: process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID,
 };
 
 export const isCognitoConfigured = () => {

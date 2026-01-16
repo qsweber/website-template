@@ -165,6 +165,9 @@ export default function LoginPage() {
         </Button>
       </Form>
       <LinkText>
+        <Link href="/forgot-password">Forgot password?</Link>
+      </LinkText>
+      <LinkText>
         Don&apos;t have an account? <Link href="/signup">Sign up</Link>
       </LinkText>
     </Container>

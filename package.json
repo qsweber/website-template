@@ -25,6 +25,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "build:with-config": "./scripts/build-with-config.sh",
     "start": "next start",
     "test": "echo \"No tests configured\" && exit 0"
   }

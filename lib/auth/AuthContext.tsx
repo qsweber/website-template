@@ -10,9 +10,13 @@ import {
   getCurrentSession,
   getCurrentUser,
   resendConfirmationCode as cognitoResendCode,
+  forgotPassword as cognitoForgotPassword,
+  resetPassword as cognitoResetPassword,
   SignInParams,
   SignUpParams,
   ConfirmSignUpParams,
+  ForgotPasswordParams,
+  ResetPasswordParams,
 } from "./cognito-service";
 import { isCognitoConfigured } from "./cognito-config";
 
@@ -31,6 +35,10 @@ interface AuthContextType {
   signOut: () => void;
   confirmSignUp: (params: ConfirmSignUpParams) => Promise<void>;
   resendConfirmationCode: (email: string) => Promise<void>;
+  forgotPassword: (params: ForgotPasswordParams) => Promise<void>;
+  resetPassword: (params: ResetPasswordParams) => Promise<void>;
+  getIdToken: () => string | null;
+  getAccessToken: () => string | null;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -95,6 +103,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     await cognitoResendCode(email);
   };
 
+  const forgotPassword = async (params: ForgotPasswordParams) => {
+    await cognitoForgotPassword(params);
+  };
+
+  const resetPassword = async (params: ResetPasswordParams) => {
+    await cognitoResetPassword(params);
+  };
+
+  const getIdToken = (): string | null => {
+    return session?.getIdToken().getJwtToken() ?? null;
+  };
+
+  const getAccessToken = (): string | null => {
+    return session?.getAccessToken().getJwtToken() ?? null;
+  };
+
   const value = {
     user,
     session,
@@ -106,6 +130,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     signOut,
     confirmSignUp,
     resendConfirmationCode,
+    forgotPassword,
+    resetPassword,
+    getIdToken,
+    getAccessToken,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

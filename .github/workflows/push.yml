@@ -19,6 +19,7 @@ jobs:
       - run: npx prettier . --check
   build:
     runs-on: ubuntu-latest
+    needs: [infra]
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v3
@@ -26,6 +27,9 @@ jobs:
           node-version: 22
       - run: npm install
       - run: npm run build
+        env:
+          NEXT_PUBLIC_COGNITO_USER_POOL_ID: ${{ needs.infra.outputs.userPoolId }}
+          NEXT_PUBLIC_COGNITO_CLIENT_ID: ${{ needs.infra.outputs.userPoolClientId }}
       - run: zip -r build.zip out/*
       - uses: actions/upload-artifact@v4
         with:
@@ -33,6 +37,9 @@ jobs:
           path: build.zip
   infra:
     runs-on: ubuntu-latest
+    outputs:
+      userPoolId: ${{ steps.pulumi-outputs.outputs.userPoolId }}
+      userPoolClientId: ${{ steps.pulumi-outputs.outputs.userPoolClientId }}
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v3
@@ -43,6 +50,14 @@ jobs:
       - run: cd infrastructure && pulumi login ${{ secrets.PULUMI_CLOUD_URL }} && cd ..
       - run: cd infrastructure && pulumi preview --stack dev --non-interactive && cd ..
       - run: cd infrastructure && pulumi preview --stack production --non-interactive && cd ..
+      - name: Get Pulumi outputs
+        id: pulumi-outputs
+        run: |
+          cd infrastructure
+          USER_POOL_ID=$(pulumi stack output userPoolId --stack production)
+          USER_POOL_CLIENT_ID=$(pulumi stack output userPoolClientId --stack production)
+          echo "userPoolId=$USER_POOL_ID" >> $GITHUB_OUTPUT
+          echo "userPoolClientId=$USER_POOL_CLIENT_ID" >> $GITHUB_OUTPUT
     env:
       PULUMI_CONFIG_PASSPHRASE: ${{ secrets.PULUMI_CONFIG_PASSPHRASE }}
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -50,7 +65,7 @@ jobs:
       AWS_REGION: "us-west-2"
   deploy_dev:
     runs-on: ubuntu-latest
-    needs: [test, build, infra]
+    needs: [test, build]
     steps:
       - uses: actions/download-artifact@v4
         with:
@@ -65,7 +80,7 @@ jobs:
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   deploy_production:
     runs-on: ubuntu-latest
-    needs: [test, build, infra]
+    needs: [test, build]
     if: github.event_name == 'push'
     steps:
       - uses: actions/download-artifact@v4

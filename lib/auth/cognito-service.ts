@@ -44,6 +44,16 @@ export interface ConfirmSignUpParams {
   code: string;
 }
 
+export interface ForgotPasswordParams {
+  email: string;
+}
+
+export interface ResetPasswordParams {
+  email: string;
+  code: string;
+  newPassword: string;
+}
+
 /**
  * Sign up a new user
  */
@@ -226,6 +236,55 @@ export const resendConfirmationCode = (email: string): Promise<string> => {
         return;
       }
       resolve(result);
+    });
+  });
+};
+
+/**
+ * Initiate forgot password flow
+ * Sends a verification code to the user's email
+ */
+export const forgotPassword = (
+  params: ForgotPasswordParams,
+): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const { email } = params;
+
+    const cognitoUser = new CognitoUser({
+      Username: email,
+      Pool: getUserPool(),
+    });
+
+    cognitoUser.forgotPassword({
+      onSuccess: (data) => {
+        resolve(data.CodeDeliveryDetails?.Destination || "");
+      },
+      onFailure: (err) => {
+        reject(err);
+      },
+    });
+  });
+};
+
+/**
+ * Reset password with verification code
+ */
+export const resetPassword = (params: ResetPasswordParams): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const { email, code, newPassword } = params;
+
+    const cognitoUser = new CognitoUser({
+      Username: email,
+      Pool: getUserPool(),
+    });
+
+    cognitoUser.confirmPassword(code, newPassword, {
+      onSuccess: (result) => {
+        resolve(result);
+      },
+      onFailure: (err) => {
+        reject(err);
+      },
     });
   });
 };
