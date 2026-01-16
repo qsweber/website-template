@@ -83,6 +83,12 @@ export function NavBar() {
           <>
             {isAuthenticated && user ? (
               <>
+                <SpacedLink
+                  href="/protected"
+                  isActive={pathname === "/protected/"}
+                >
+                  Protected
+                </SpacedLink>
                 <span style={{ marginLeft: 20, fontWeight: "600" }}>
                   {user.email}
                 </span>
