@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import styled from "@emotion/styled";
 import Link from "next/link";
@@ -94,7 +94,7 @@ const HelpText = styled.p(() => ({
   marginTop: 5,
 }));
 
-export default function ResetPasswordPage() {
+function ResetPasswordForm() {
   const [email, setEmail] = useState("");
   const [code, setCode] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -221,5 +221,13 @@ export default function ResetPasswordPage() {
         Remember your password? <Link href="/login">Sign In</Link>
       </LinkText>
     </Container>
+  );
+}
+
+export default function ResetPasswordPage() {
+  return (
+    <Suspense fallback={<Container>Loading...</Container>}>
+      <ResetPasswordForm />
+    </Suspense>
   );
 }
