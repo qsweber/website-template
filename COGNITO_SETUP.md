@@ -23,10 +23,12 @@ pulumi up --stack dev  # or production
 ### 2. Get Cognito Configuration Values
 
 After deployment, Pulumi will output the following values:
+
 - `userPoolId`: The Cognito User Pool ID
 - `userPoolClientId`: The Cognito User Pool Client ID
 
 You can retrieve these values at any time with:
+
 ```bash
 cd infrastructure
 pulumi stack output userPoolId
@@ -100,6 +102,7 @@ For production deployments, set the environment variables in your CI/CD system o
 ### Password Policy
 
 The Cognito User Pool is configured with a strong password policy:
+
 - Minimum length: 8 characters
 - Requires uppercase letters
 - Requires lowercase letters
@@ -117,6 +120,7 @@ The Cognito User Pool is configured with a strong password policy:
 ### "AWS Cognito is not configured" Warning
 
 If you see this warning on the login/signup pages:
+
 1. Ensure the environment variables are set correctly
 2. Rebuild the application: `npm run build`
 3. Restart the development server or redeploy
@@ -124,6 +128,7 @@ If you see this warning on the login/signup pages:
 ### Email Verification Issues
 
 If users don't receive verification emails:
+
 1. Check the spam/junk folder
 2. Verify the email configuration in the Cognito User Pool
 3. Consider configuring a custom email service (SES) for production
@@ -131,6 +136,7 @@ If users don't receive verification emails:
 ### Build Failures
 
 If the build fails after adding authentication:
+
 1. Ensure all dependencies are installed: `npm install`
 2. Check for TypeScript errors: `npx tsc --noEmit`
 3. Run the build locally: `npm run build`
@@ -140,6 +146,7 @@ If the build fails after adding authentication:
 ### Static Export Constraints
 
 This application uses Next.js static export (`output: "export"`), which means:
+
 - No server-side API routes are available
 - All authentication is handled client-side
 - The Cognito SDK runs entirely in the browser
