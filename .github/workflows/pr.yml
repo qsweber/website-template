@@ -17,7 +17,6 @@ jobs:
       - run: npx prettier . --check
   infra:
     runs-on: ubuntu-latest
-    environment: dev
     outputs:
       distributionId: ${{ steps.pulumi-outputs.outputs.distributionId }}
       s3BucketUri: ${{ steps.pulumi-outputs.outputs.s3BucketUri }}
@@ -51,7 +50,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     needs: [test, infra]
-    environment: dev
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v3
@@ -70,7 +68,6 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: [test, infra, build]
-    environment: dev
     steps:
       - uses: actions/download-artifact@v4
         with:
