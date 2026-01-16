@@ -149,7 +149,7 @@ const cNameRecord = new aws.route53.Record(
 );
 
 // Create Cognito User Pool for authentication
-const userPool = new aws.cognito.UserPool("website-user-pool", {
+const userPool = new aws.cognito.UserPool(`${bucketNameAndUrl}-user-pool`, {
   name: `${bucketNameAndUrl}-user-pool`,
   autoVerifiedAttributes: ["email"],
   usernameAttributes: ["email"],
@@ -179,26 +179,31 @@ const userPool = new aws.cognito.UserPool("website-user-pool", {
 });
 
 // Create Cognito User Pool Client
-const userPoolClient = new aws.cognito.UserPoolClient("website-user-pool-client", {
-  name: `${bucketNameAndUrl}-user-pool-client`,
-  userPoolId: userPool.id,
-  generateSecret: false,
-  explicitAuthFlows: [
-    "ALLOW_USER_PASSWORD_AUTH",
-    "ALLOW_REFRESH_TOKEN_AUTH",
-    "ALLOW_USER_SRP_AUTH",
-  ],
-  preventUserExistenceErrors: "ENABLED",
-  readAttributes: ["email", "email_verified"],
-  writeAttributes: ["email"],
-});
+const userPoolClient = new aws.cognito.UserPoolClient(
+  `${bucketNameAndUrl}-user-pool-client`,
+  {
+    name: `${bucketNameAndUrl}-user-pool-client`,
+    userPoolId: userPool.id,
+    generateSecret: false,
+    explicitAuthFlows: [
+      "ALLOW_USER_PASSWORD_AUTH",
+      "ALLOW_REFRESH_TOKEN_AUTH",
+      "ALLOW_USER_SRP_AUTH",
+    ],
+    preventUserExistenceErrors: "ENABLED",
+    readAttributes: ["email", "email_verified", "name"],
+    writeAttributes: ["email", "name"],
+  },
+);
 
 export const bucketUrn = bucket.urn;
+export const s3BucketUri = pulumi.interpolate`s3://${bucket.bucket}`;
 export const publicAccessBlockUrn = publicAccessBlock.urn;
 export const bucketPolicyUrn = bucketPolicy.urn;
 export const exampleBucketOwnershipControlsUrn =
   exampleBucketOwnershipControls.urn;
 export const distributionUrn = distribution.urn;
+export const distributionId = distribution.id;
 export const zoneUrn = zone.urn;
 export const cNameRecordUrn = cNameRecord.urn;
 export const userPoolId = userPool.id;
