@@ -15,6 +15,7 @@ jobs:
       - run: npm install
       - run: npm run test
       - run: npx prettier . --check
+      - run: npx eslint . --ext .ts,.tsx
   infra:
     runs-on: ubuntu-latest
     outputs:
