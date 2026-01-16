@@ -2,8 +2,9 @@
 
 import { ReactNode } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import styled from "@emotion/styled";
+import { useAuth } from "../../lib/auth/AuthContext";
 
 const NavBarWrapper = styled.div(() => ({
   display: "flex",
@@ -19,6 +20,8 @@ const Initials = styled.div(() => ({
 
 const LinkGroup = styled.nav(() => ({
   margin: "auto 0", // centers it vertically within NavBar
+  display: "flex",
+  alignItems: "center",
 }));
 
 const StyledLink = styled.a<{ $isActive: boolean }>(({ $isActive }) => ({
@@ -26,6 +29,20 @@ const StyledLink = styled.a<{ $isActive: boolean }>(({ $isActive }) => ({
   textDecoration: $isActive ? "underline" : "none",
   color: "inherit",
   fontWeight: "600",
+  cursor: "pointer",
+}));
+
+const StyledButton = styled.button(() => ({
+  marginLeft: 20,
+  textDecoration: "none",
+  color: "inherit",
+  fontWeight: "600",
+  cursor: "pointer",
+  background: "none",
+  border: "none",
+  fontSize: "inherit",
+  fontFamily: "inherit",
+  padding: 0,
 }));
 
 const SpacedLink = ({
@@ -44,6 +61,13 @@ const SpacedLink = ({
 
 export function NavBar() {
   const pathname = usePathname();
+  const router = useRouter();
+  const { isAuthenticated, user, signOut, isLoading } = useAuth();
+
+  const handleLogout = () => {
+    signOut();
+    router.push("/");
+  };
 
   return (
     <NavBarWrapper>
@@ -55,6 +79,22 @@ export function NavBar() {
         <SpacedLink href="/another" isActive={pathname === "/another/"}>
           Another
         </SpacedLink>
+        {!isLoading && (
+          <>
+            {isAuthenticated && user ? (
+              <>
+                <span style={{ marginLeft: 20, fontWeight: "600" }}>
+                  {user.email}
+                </span>
+                <StyledButton onClick={handleLogout}>Logout</StyledButton>
+              </>
+            ) : (
+              <SpacedLink href="/login" isActive={pathname === "/login/"}>
+                Login
+              </SpacedLink>
+            )}
+          </>
+        )}
       </LinkGroup>
     </NavBarWrapper>
   );

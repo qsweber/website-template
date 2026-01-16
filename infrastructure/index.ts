@@ -148,6 +148,51 @@ const cNameRecord = new aws.route53.Record(
   },
 );
 
+// Create Cognito User Pool for authentication
+const userPool = new aws.cognito.UserPool("website-user-pool", {
+  name: `${bucketNameAndUrl}-user-pool`,
+  autoVerifiedAttributes: ["email"],
+  usernameAttributes: ["email"],
+  passwordPolicy: {
+    minimumLength: 8,
+    requireLowercase: true,
+    requireNumbers: true,
+    requireSymbols: true,
+    requireUppercase: true,
+  },
+  emailConfiguration: {
+    emailSendingAccount: "COGNITO_DEFAULT",
+  },
+  verificationMessageTemplate: {
+    defaultEmailOption: "CONFIRM_WITH_CODE",
+    emailMessage: "Your verification code is {####}",
+    emailSubject: "Verify your email",
+  },
+  accountRecoverySetting: {
+    recoveryMechanisms: [
+      {
+        name: "verified_email",
+        priority: 1,
+      },
+    ],
+  },
+});
+
+// Create Cognito User Pool Client
+const userPoolClient = new aws.cognito.UserPoolClient("website-user-pool-client", {
+  name: `${bucketNameAndUrl}-user-pool-client`,
+  userPoolId: userPool.id,
+  generateSecret: false,
+  explicitAuthFlows: [
+    "ALLOW_USER_PASSWORD_AUTH",
+    "ALLOW_REFRESH_TOKEN_AUTH",
+    "ALLOW_USER_SRP_AUTH",
+  ],
+  preventUserExistenceErrors: "ENABLED",
+  readAttributes: ["email", "email_verified"],
+  writeAttributes: ["email"],
+});
+
 export const bucketUrn = bucket.urn;
 export const publicAccessBlockUrn = publicAccessBlock.urn;
 export const bucketPolicyUrn = bucketPolicy.urn;
@@ -156,3 +201,5 @@ export const exampleBucketOwnershipControlsUrn =
 export const distributionUrn = distribution.urn;
 export const zoneUrn = zone.urn;
 export const cNameRecordUrn = cNameRecord.urn;
+export const userPoolId = userPool.id;
+export const userPoolClientId = userPoolClient.id;
