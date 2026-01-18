@@ -226,11 +226,11 @@ This will:
 
 1. `app/(auth)/layout.tsx` - Auth route group layout
 2. `app/(auth)/login/page.tsx` - Login page
-6. `app/(auth)/signup/page.tsx` - Signup page
-7. `app/(auth)/confirm/page.tsx` - Email confirmation page
-8. `app/(auth)/forgot-password/page.tsx` - Forgot password page
-9. `app/(auth)/reset-password/page.tsx` - Reset password page
-10. `app/(auth)/components/AuthFormComponents.tsx` - Shared styled components
+3. `app/(auth)/signup/page.tsx` - Signup page
+4. `app/(auth)/confirm/page.tsx` - Email confirmation page
+5. `app/(auth)/forgot-password/page.tsx` - Forgot password page
+6. `app/(auth)/reset-password/page.tsx` - Reset password page
+7. `app/(auth)/components/AuthFormComponents.tsx` - Shared styled components
 
 **Main Pages:**
 
