@@ -182,6 +182,7 @@ npm run build:with-config
 ```
 
 This will:
+
 1. Fetch Cognito IDs from Pulumi stack
 2. Set environment variables
 3. Build with configuration baked in
@@ -216,13 +217,15 @@ This will:
 ### New Files (22)
 
 **Authentication:**
+
 1. `lib/auth/AuthContext.tsx` - Auth context provider with token helpers
 2. `lib/auth/cognito-config.ts` - Configuration
 3. `lib/auth/cognito-service.ts` - Authentication service with password reset
 
 **Auth Pages:**
-4. `app/(auth)/layout.tsx` - Auth route group layout
-5. `app/(auth)/login/page.tsx` - Login page
+
+1. `app/(auth)/layout.tsx` - Auth route group layout
+2. `app/(auth)/login/page.tsx` - Login page
 6. `app/(auth)/signup/page.tsx` - Signup page
 7. `app/(auth)/confirm/page.tsx` - Email confirmation page
 8. `app/(auth)/forgot-password/page.tsx` - Forgot password page
@@ -230,15 +233,16 @@ This will:
 10. `app/(auth)/components/AuthFormComponents.tsx` - Shared styled components
 
 **Main Pages:**
-11. `app/(main)/protected/page.tsx` - Protected route example
+
+1. `app/(main)/protected/page.tsx` - Protected route example
 
 **Build Scripts:**
-12. `scripts/build-with-config.sh` - Bash build script
-13. `scripts/build-with-config.js` - Node.js build script
+
+2. `scripts/build-with-config.sh` - Bash build script 13. `scripts/build-with-config.js` - Node.js build script
 
 **Documentation:**
-14. `docs/COGNITO_SETUP.md` - Setup documentation
-15. `docs/IMPLEMENTATION_SUMMARY.md` - This file
+
+3. `docs/COGNITO_SETUP.md` - Setup documentation 15. `docs/IMPLEMENTATION_SUMMARY.md` - This file
 
 ### Modified Files (10)
 
@@ -256,6 +260,7 @@ This will:
 ## Dependencies Added
 
 - `amazon-cognito-identity-js@6.3.16` - AWS Cognito SDK for JavaScript
+
   - No known vulnerabilities
   - Provides authentication, token management, and session handling
 

@@ -6,12 +6,12 @@ on:
       stack:
         required: true
         type: string
-        description: 'Pulumi stack name (dev or production)'
+        description: "Pulumi stack name (dev or production)"
       run-deploy:
         required: false
         type: boolean
         default: true
-        description: 'Whether to run deployment step'
+        description: "Whether to run deployment step"
     secrets:
       PULUMI_CLOUD_URL:
         required: true
