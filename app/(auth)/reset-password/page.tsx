@@ -4,6 +4,8 @@ import React, { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "../../../lib/auth/AuthContext";
+import { validatePassword } from "../../../lib/auth/password-validation";
+import { PasswordRequirementsList } from "../../../lib/auth/PasswordRequirementsList";
 import {
   Container,
   Title,
@@ -48,8 +50,9 @@ function ResetPasswordForm() {
       return;
     }
 
-    if (newPassword.length < 8) {
-      setError("Password must be at least 8 characters");
+    const passwordError = validatePassword(newPassword);
+    if (passwordError) {
+      setError(passwordError);
       return;
     }
 
@@ -125,7 +128,7 @@ function ResetPasswordForm() {
             disabled={isLoading || success}
             minLength={8}
           />
-          <HelpText>Must be at least 8 characters</HelpText>
+          <PasswordRequirementsList />
         </FormGroup>
         <FormGroup>
           <Label htmlFor="confirmPassword">Confirm Password</Label>

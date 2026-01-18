@@ -4,6 +4,8 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "../../../lib/auth/AuthContext";
+import { validatePassword } from "../../../lib/auth/password-validation";
+import { PasswordRequirementsList } from "../../../lib/auth/PasswordRequirementsList";
 import {
   Container,
   Title,
@@ -16,7 +18,6 @@ import {
   SuccessMessage,
   LinkText,
   WarningMessage,
-  PasswordRequirements,
 } from "../components/AuthFormComponents";
 
 export default function SignupPage() {
@@ -30,25 +31,6 @@ export default function SignupPage() {
   const router = useRouter();
   const { signUp, isConfigured } = useAuth();
 
-  const validatePassword = () => {
-    if (password.length < 8) {
-      return "Password must be at least 8 characters long";
-    }
-    if (!/[a-z]/.test(password)) {
-      return "Password must contain at least one lowercase letter";
-    }
-    if (!/[A-Z]/.test(password)) {
-      return "Password must contain at least one uppercase letter";
-    }
-    if (!/[0-9]/.test(password)) {
-      return "Password must contain at least one number";
-    }
-    if (!/[^A-Za-z0-9]/.test(password)) {
-      return "Password must contain at least one special character";
-    }
-    return null;
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
@@ -61,7 +43,7 @@ export default function SignupPage() {
     }
 
     // Validate password requirements
-    const passwordError = validatePassword();
+    const passwordError = validatePassword(password);
     if (passwordError) {
       setError(passwordError);
       return;
@@ -144,16 +126,7 @@ export default function SignupPage() {
             disabled={isLoading || success}
             minLength={8}
           />
-          <PasswordRequirements>
-            Password must contain:
-            <ul>
-              <li>At least 8 characters</li>
-              <li>At least one uppercase letter</li>
-              <li>At least one lowercase letter</li>
-              <li>At least one number</li>
-              <li>At least one special character</li>
-            </ul>
-          </PasswordRequirements>
+          <PasswordRequirementsList />
         </FormGroup>
         <FormGroup>
           <Label htmlFor="confirmPassword">Confirm Password</Label>
