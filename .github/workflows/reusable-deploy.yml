@@ -7,6 +7,10 @@ on:
         required: true
         type: string
         description: "Pulumi stack name (dev or production)"
+      environment:
+        required: true
+        type: string
+        description: "GitHub environment name (dev or production)"
       run-deploy:
         required: false
         type: boolean
@@ -91,6 +95,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [test, infra, build]
     if: ${{ inputs.run-deploy }}
+    environment: ${{ inputs.environment }}
     steps:
       - uses: actions/download-artifact@v4
         with:

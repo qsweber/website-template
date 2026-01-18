@@ -9,6 +9,7 @@ jobs:
     uses: ./.github/workflows/reusable-deploy.yml
     with:
       stack: production
+      environment: production
       run-deploy: true
     secrets:
       PULUMI_CLOUD_URL: ${{ secrets.PULUMI_CLOUD_URL }}
