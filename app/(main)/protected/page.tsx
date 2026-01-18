@@ -38,9 +38,9 @@ export default function ProtectedPage() {
 
   if (isLoading) {
     return (
-      <Container>
+      <div>
         <LoadingMessage>Loading...</LoadingMessage>
-      </Container>
+      </div>
     );
   }
 
@@ -49,7 +49,7 @@ export default function ProtectedPage() {
   }
 
   return (
-    <Container>
+    <div>
       <Title>Protected Page</Title>
       <Message>
         Welcome, {user?.email}! This page is only accessible to authenticated
@@ -60,6 +60,6 @@ export default function ProtectedPage() {
         automatically redirects to the login page if the user is not
         authenticated.
       </Message>
-    </Container>
+    </div>
   );
 }
