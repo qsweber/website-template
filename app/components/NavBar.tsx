@@ -112,22 +112,26 @@ export function NavBar() {
         ☰
       </HamburgerButton>
       <Menu $isOpen={isMenuOpen}>
-        {isAuthenticated && user && (
-          <UserEmail>{user.email}</UserEmail>
-        )}
+        {isAuthenticated && user && <UserEmail>{user.email}</UserEmail>}
         <Link href="/" passHref legacyBehavior>
           <MenuItem $isActive={pathname === "/"} onClick={handleMenuItemClick}>
             Home
           </MenuItem>
         </Link>
         <Link href="/another" passHref legacyBehavior>
-          <MenuItem $isActive={pathname === "/another/"} onClick={handleMenuItemClick}>
+          <MenuItem
+            $isActive={pathname === "/another/"}
+            onClick={handleMenuItemClick}
+          >
             Another
           </MenuItem>
         </Link>
         {isAuthenticated && (
           <Link href="/protected" passHref legacyBehavior>
-            <MenuItem $isActive={pathname === "/protected/"} onClick={handleMenuItemClick}>
+            <MenuItem
+              $isActive={pathname === "/protected/"}
+              onClick={handleMenuItemClick}
+            >
               Protected
             </MenuItem>
           </Link>
@@ -139,7 +143,10 @@ export function NavBar() {
               <MenuButton onClick={handleLogout}>Logout</MenuButton>
             ) : (
               <Link href="/login" passHref legacyBehavior>
-                <MenuItem $isActive={pathname === "/login/"} onClick={handleMenuItemClick}>
+                <MenuItem
+                  $isActive={pathname === "/login/"}
+                  onClick={handleMenuItemClick}
+                >
                   Login
                 </MenuItem>
               </Link>
