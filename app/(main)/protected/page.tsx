@@ -5,12 +5,6 @@ import { useRouter } from "next/navigation";
 import styled from "@emotion/styled";
 import { useAuth } from "../../../lib/auth/AuthContext";
 
-const Container = styled.div(() => ({
-  maxWidth: 600,
-  margin: "40px auto",
-  padding: "20px",
-}));
-
 const Title = styled.h1(() => ({
   marginBottom: 20,
 }));
