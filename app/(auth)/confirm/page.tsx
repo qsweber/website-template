@@ -4,7 +4,7 @@ import React, { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import styled from "@emotion/styled";
 import Link from "next/link";
-import { useAuth } from "../../../lib/auth/AuthContext";
+import { useAuth } from "../../../lib/auth/useAuth";
 import {
   Container,
   Title,

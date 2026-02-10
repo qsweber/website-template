@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { useAuth } from "../../../lib/auth/AuthContext";
+import { useAuth } from "../../../lib/auth/useAuth";
 import {
   Container,
   Title,

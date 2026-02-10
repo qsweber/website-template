@@ -3,7 +3,7 @@
 import React, { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { useAuth } from "../../../lib/auth/AuthContext";
+import { useAuth } from "../../../lib/auth/useAuth";
 import { validatePassword } from "../../../lib/auth/password-validation";
 import { PasswordRequirementsList } from "../../../lib/auth/PasswordRequirementsList";
 import {

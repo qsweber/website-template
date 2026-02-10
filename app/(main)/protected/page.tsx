@@ -3,7 +3,7 @@
 import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import styled from "@emotion/styled";
-import { useAuth } from "../../../lib/auth/AuthContext";
+import { useAuth } from "../../../lib/auth/useAuth";
 
 const Title = styled.h1(() => ({
   marginBottom: 20,

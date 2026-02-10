@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import styled from "@emotion/styled";
-import { useAuth } from "../../lib/auth/AuthContext";
+import { useAuth } from "../../lib/auth/useAuth";
 
 const NavBarWrapper = styled.div(() => ({
   display: "flex",
