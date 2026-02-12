@@ -55,13 +55,7 @@ Note: For static hosting, deploy the contents of the `out` folder instead.
 
 This site is configured for static export. After running `npm run build`, the static files will be in the `out` directory.
 
-You can deploy these files to any static hosting service:
-
-- AWS S3 + CloudFront
-- Vercel
-- Netlify
-- GitHub Pages
-- Any other static hosting provider
+Pulumi manages the AWS infrastructure for the deployment to S3+Cloudfront.
 
 ## Learn More
 
