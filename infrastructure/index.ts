@@ -10,7 +10,6 @@ const bucket = new aws.s3.Bucket(
   {
     arn: `arn:aws:s3:::${bucketNameAndUrl}`,
     bucket: bucketNameAndUrl,
-    hostedZoneId: "Z3BJ6K6RIION7M",
     requestPayer: "BucketOwner",
     serverSideEncryptionConfiguration: {
       rule: {
@@ -26,8 +25,6 @@ const bucket = new aws.s3.Bucket(
       errorDocument: "index.html",
       indexDocument: "index.html",
     },
-    websiteDomain: "s3-website-us-west-2.amazonaws.com",
-    websiteEndpoint: `${bucketNameAndUrl}.s3-website-us-west-2.amazonaws.com`,
   },
   {
     protect: true,
@@ -61,7 +58,7 @@ const bucketPolicy = new aws.s3.BucketPolicy(
   { dependsOn: publicAccessBlock },
 );
 
-const exampleBucketOwnershipControls = new aws.s3.BucketOwnershipControls(
+const bucketOwnershipControls = new aws.s3.BucketOwnershipControls(
   `${bucketNameAndUrl}-ownership-controls`,
   {
     bucket: bucket.id,
@@ -112,22 +109,10 @@ const distribution = new aws.cloudfront.Distribution(
       },
     },
     viewerCertificate: {
-      acmCertificateArn:
-        "arn:aws:acm:us-east-1:120356305272:certificate/10f59a3f-a08e-4b8d-8a4c-f0a5fcb61e83",
+      acmCertificateArn: config.get("certificateArn"),
       minimumProtocolVersion: "TLSv1.2_2021",
       sslSupportMethod: "sni-only",
     },
-  },
-  {
-    protect: true,
-  },
-);
-
-const zone = new aws.route53.Zone(
-  "www.quinnweber.com-zone",
-  {
-    comment: "",
-    name: "quinnweber.com",
   },
   {
     protect: true,
@@ -141,7 +126,7 @@ const cNameRecord = new aws.route53.Record(
     records: [distribution.domainName.apply((t) => t)],
     ttl: 3600,
     type: aws.route53.RecordType.CNAME,
-    zoneId: zone.id,
+    zoneId: config.require("zoneId"),
   },
   {
     protect: true,
@@ -159,6 +144,7 @@ const userPool = new aws.cognito.UserPool(`${bucketNameAndUrl}-user-pool`, {
     requireNumbers: true,
     requireSymbols: true,
     requireUppercase: true,
+    temporaryPasswordValidityDays: 7,
   },
   emailConfiguration: {
     emailSendingAccount: "COGNITO_DEFAULT",
@@ -186,11 +172,21 @@ const userPoolClient = new aws.cognito.UserPoolClient(
     userPoolId: userPool.id,
     generateSecret: false,
     explicitAuthFlows: [
-      "ALLOW_USER_PASSWORD_AUTH",
       "ALLOW_REFRESH_TOKEN_AUTH",
+      "ALLOW_USER_PASSWORD_AUTH",
       "ALLOW_USER_SRP_AUTH",
     ],
     preventUserExistenceErrors: "ENABLED",
+    enableTokenRevocation: true,
+    authSessionValidity: 3,
+    accessTokenValidity: 60,
+    idTokenValidity: 60,
+    refreshTokenValidity: 30,
+    tokenValidityUnits: {
+      accessToken: "minutes",
+      idToken: "minutes",
+      refreshToken: "days",
+    },
     readAttributes: ["email", "email_verified", "name"],
     writeAttributes: ["email", "name"],
   },
@@ -200,11 +196,9 @@ export const bucketUrn = bucket.urn;
 export const s3BucketUri = pulumi.interpolate`s3://${bucket.bucket}`;
 export const publicAccessBlockUrn = publicAccessBlock.urn;
 export const bucketPolicyUrn = bucketPolicy.urn;
-export const exampleBucketOwnershipControlsUrn =
-  exampleBucketOwnershipControls.urn;
+export const exampleBucketOwnershipControlsUrn = bucketOwnershipControls.urn;
 export const distributionUrn = distribution.urn;
 export const distributionId = distribution.id;
-export const zoneUrn = zone.urn;
 export const cNameRecordUrn = cNameRecord.urn;
 export const userPoolId = userPool.id;
 export const userPoolClientId = userPoolClient.id;
