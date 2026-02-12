@@ -1,9 +1,16 @@
 import { ReactNode } from "react";
+import { Work_Sans } from "next/font/google";
 import "./globals.css";
+
+const workSans = Work_Sans({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-work-sans",
+});
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" className={workSans.variable}>
       <head>
         <meta charSet="utf-8" />
         <link rel="icon" href="/favicon.ico" />
@@ -15,10 +22,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         />
         <link rel="apple-touch-icon" href="/logo192.png" />
         <link rel="manifest" href="/manifest.json" />
-        <link
-          href="https://fonts.googleapis.com/css?family=Work+Sans"
-          rel="stylesheet"
-        />
         <title>Title</title>
       </head>
       <body>{children}</body>

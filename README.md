@@ -9,6 +9,22 @@ A personal website template built with [Next.js](https://nextjs.org/) and config
 - TypeScript support
 - Emotion CSS-in-JS for styling
 - Responsive design
+- **AWS Cognito Authentication** - User registration, login, and email verification
+
+## Authentication
+
+This template includes AWS Cognito integration for user authentication. See [COGNITO_SETUP.md](./COGNITO_SETUP.md) for detailed setup instructions.
+
+### Quick Start for Authentication
+
+1. Deploy infrastructure: `cd infrastructure && pulumi up`
+2. Set environment variables in `.env.local`:
+   ```
+   NEXT_PUBLIC_COGNITO_REGION=us-west-2
+   NEXT_PUBLIC_COGNITO_USER_POOL_ID=<your-pool-id>
+   NEXT_PUBLIC_COGNITO_CLIENT_ID=<your-client-id>
+   ```
+3. Run the app: `npm run dev`
 
 ## Available Scripts
 
@@ -39,13 +55,7 @@ Note: For static hosting, deploy the contents of the `out` folder instead.
 
 This site is configured for static export. After running `npm run build`, the static files will be in the `out` directory.
 
-You can deploy these files to any static hosting service:
-
-- AWS S3 + CloudFront
-- Vercel
-- Netlify
-- GitHub Pages
-- Any other static hosting provider
+Pulumi manages the AWS infrastructure for the deployment to S3+Cloudfront.
 
 ## Learn More
 
