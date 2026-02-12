@@ -1,4 +1,4 @@
-name: Reusable Deploy Workflow
+name: CI Workflow
 
 on:
   workflow_call:

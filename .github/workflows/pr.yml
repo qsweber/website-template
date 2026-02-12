@@ -5,8 +5,8 @@ on:
     branches: [main]
 
 jobs:
-  deploy:
-    uses: ./.github/workflows/reusable-deploy.yml
+  ci:
+    uses: ./.github/workflows/ci.yml
     with:
       stack: dev
       environment: dev
