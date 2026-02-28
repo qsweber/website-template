@@ -21,7 +21,7 @@ export class ApiClient {
    */
   private async request<T>(
     endpoint: string,
-    options: RequestInit = {}
+    options: RequestInit = {},
   ): Promise<T> {
     const idToken = this.getIdToken();
 
@@ -44,7 +44,7 @@ export class ApiClient {
     if (!response.ok) {
       const errorText = await response.text();
       throw new Error(
-        `API request failed: ${response.status} ${response.statusText} - ${errorText}`
+        `API request failed: ${response.status} ${response.statusText} - ${errorText}`,
       );
     }
 

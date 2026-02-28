@@ -69,7 +69,7 @@ export default function ProtectedPage() {
   const { isAuthenticated, isLoading, user } = useAuth();
   const router = useRouter();
   const apiClient = useApiClient();
-  
+
   const [apiResponse, setApiResponse] = useState<string | null>(null);
   const [apiError, setApiError] = useState<string | null>(null);
   const [isLoadingApi, setIsLoadingApi] = useState(false);

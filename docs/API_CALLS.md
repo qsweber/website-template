@@ -17,10 +17,12 @@ See `.env.local.example` for the complete configuration template.
 ### 2. How It Works
 
 When a user authenticates with Cognito, they receive:
+
 - **ID Token**: Contains user identity claims (email, sub, etc.) - this is what you typically send to your backend
 - **Access Token**: Used for authorizing access to resources
 
 The API client automatically:
+
 1. Retrieves the user's ID token from the auth context
 2. Adds it to the `Authorization` header as a Bearer token
 3. Makes the HTTP request to your backend
@@ -70,18 +72,18 @@ The API client supports all HTTP methods:
 const data = await apiClient.get("/endpoint");
 
 // POST request
-const result = await apiClient.post("/endpoint", { 
-  key: "value" 
+const result = await apiClient.post("/endpoint", {
+  key: "value",
 });
 
 // PUT request
-const updated = await apiClient.put("/endpoint/123", { 
-  key: "new value" 
+const updated = await apiClient.put("/endpoint/123", {
+  key: "new value",
 });
 
 // PATCH request
-const patched = await apiClient.patch("/endpoint/123", { 
-  field: "updated" 
+const patched = await apiClient.patch("/endpoint/123", {
+  field: "updated",
 });
 
 // DELETE request
@@ -106,6 +108,7 @@ const userData = await apiClient.get<UserData>("/user/profile");
 ### Error Handling
 
 The API client throws errors for:
+
 - User not authenticated (no ID token available)
 - Network failures
 - Non-2xx HTTP responses
@@ -117,7 +120,7 @@ try {
 } catch (error) {
   if (error instanceof Error) {
     console.error("Error:", error.message);
-    
+
     // Handle specific errors
     if (error.message.includes("not authenticated")) {
       // Redirect to login
@@ -158,10 +161,10 @@ For server-side API calls (in API routes or server components), you'll need to p
 
 export default function ClientComponent() {
   const { getIdToken } = useAuth();
-  
+
   const handleAction = async () => {
     const idToken = getIdToken();
-    
+
     const response = await fetch("/api/server-action", {
       method: "POST",
       headers: {
@@ -169,11 +172,11 @@ export default function ClientComponent() {
       },
       body: JSON.stringify({ idToken }),
     });
-    
+
     const data = await response.json();
     console.log(data);
   };
-  
+
   return <button onClick={handleAction}>Do Server Action</button>;
 }
 ```
@@ -184,7 +187,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
   const { idToken } = await request.json();
-  
+
   // Make authenticated request to your backend
   const response = await fetch(
     "https://0deoyki5fg.execute-api.us-west-2.amazonaws.com/dev/foo",
@@ -193,9 +196,9 @@ export async function POST(request: NextRequest) {
         "Content-Type": "application/json",
         Authorization: `Bearer ${idToken}`,
       },
-    }
+    },
   );
-  
+
   const data = await response.json();
   return NextResponse.json(data);
 }
@@ -254,7 +257,7 @@ The authorizer will automatically validate tokens and make user claims available
 
 ## Example: See It In Action
 
-Check out the [Protected Page](../app/(main)/protected/page.tsx) for a complete working example of making authenticated API calls.
+Check out the [Protected Page](<../app/(main)/protected/page.tsx>) for a complete working example of making authenticated API calls.
 
 ## Troubleshooting
 
