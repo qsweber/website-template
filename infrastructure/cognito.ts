@@ -1,10 +1,10 @@
 import * as aws from "@pulumi/aws";
 import * as pulumi from "@pulumi/pulumi";
 
+import { domainIdentity } from "./ses";
+
 const config = new pulumi.Config();
 const bucketNameAndUrl = config.require("bucket");
-const sesFromEmail = config.require("sesFromEmail");
-const sesEmailIdentityArn = config.require("sesEmailIdentityArn");
 
 // Create Cognito User Pool for authentication
 const userPool = new aws.cognito.UserPool(`${bucketNameAndUrl}-user-pool`, {
@@ -21,8 +21,8 @@ const userPool = new aws.cognito.UserPool(`${bucketNameAndUrl}-user-pool`, {
   },
   emailConfiguration: {
     emailSendingAccount: "DEVELOPER",
-    fromEmailAddress: sesFromEmail,
-    sourceArn: sesEmailIdentityArn,
+    fromEmailAddress: `${bucketNameAndUrl} <no-reply@${bucketNameAndUrl}>`,
+    sourceArn: domainIdentity.arn,
   },
   verificationMessageTemplate: {
     defaultEmailOption: "CONFIRM_WITH_CODE",
