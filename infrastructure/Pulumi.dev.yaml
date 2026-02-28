@@ -5,3 +5,4 @@ config:
   zoneId: Z07290422T6PHN4TKVNW0
   sesFromEmail: dev-template@quinnweber.com
   sesEmailIdentityArn: arn:aws:ses:us-west-2:120356305272:identity/quinnweber.com
+  apiUrl: https://0deoyki5fg.execute-api.us-west-2.amazonaws.com/dev
