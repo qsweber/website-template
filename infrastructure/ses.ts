@@ -6,9 +6,12 @@ const domain = config.require("bucket");
 const zoneId = config.require("zoneId");
 
 // SES domain identity
-const domainIdentity = new aws.ses.DomainIdentity(`${domain}-ses-domain-identity`, {
-  domain: domain,
-});
+const domainIdentity = new aws.ses.DomainIdentity(
+  `${domain}-ses-domain-identity`,
+  {
+    domain: domain,
+  },
+);
 
 // Verification TXT record for SES
 new aws.route53.Record(`${domain}-ses-domain-verification`, {
