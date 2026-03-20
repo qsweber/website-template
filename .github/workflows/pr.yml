@@ -20,6 +20,8 @@ jobs:
   production-preview:
     name: Pulumi Preview (production)
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v3
