@@ -15,7 +15,7 @@ export const useApiClient = () => {
 
     if (!baseUrl) {
       throw new Error(
-        "NEXT_PUBLIC_API_URL environment variable is not set. It must be defined to configure the API client base URL."
+        "NEXT_PUBLIC_API_URL environment variable is not set. It must be defined to configure the API client base URL.",
       );
     }
 
