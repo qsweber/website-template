@@ -30,9 +30,11 @@ export class ApiClient {
     }
 
     const url = `${this.baseUrl}${endpoint}`;
+    const hasBody = options.body !== undefined && options.body !== null;
     const headers = {
-      "Content-Type": "application/json",
       Authorization: `Bearer ${idToken}`,
+      Accept: "application/json",
+      ...(hasBody ? { "Content-Type": "application/json" } : {}),
       ...options.headers,
     };
 
