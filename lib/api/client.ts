@@ -30,12 +30,12 @@ export class ApiClient {
     }
 
     const url = `${this.baseUrl}${endpoint}`;
-    const hasBody = options.body !== undefined && options.body !== null;
-    const headers = {
     const headers = new Headers(options.headers);
-    headers.set("Content-Type", "application/json");
     headers.set("Authorization", `Bearer ${idToken}`);
 
+    if (options.body !== undefined && !headers.has("Content-Type")) {
+      headers.set("Content-Type", "application/json");
+    }
     const response = await fetch(url, {
       ...options,
       headers,
