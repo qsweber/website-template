@@ -19,7 +19,7 @@ inputs:
 runs:
   using: composite
   steps:
-    - uses: pulumi/actions@v4
+    - uses: pulumi/actions@v6
 
     - name: Pulumi login
       shell: bash
