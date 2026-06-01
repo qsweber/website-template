@@ -86,8 +86,8 @@ export default function ProtectedPage() {
     setApiResponse(null);
 
     try {
-      const response = await apiClient.get("/foo");
-      setApiResponse(JSON.stringify(response, null, 2));
+      await apiClient.post("/record-click");
+      setApiResponse("Click recorded successfully!");
     } catch (error) {
       setApiError(error instanceof Error ? error.message : "Unknown error");
     } finally {
@@ -122,17 +122,16 @@ export default function ProtectedPage() {
       <ApiSection>
         <h2>Authenticated API Call Example</h2>
         <p>
-          Click the button below to make an authenticated request to your
-          backend API. Your Cognito ID token will be sent in the Authorization
-          header.
+          Click the button below to record a click. Your Cognito ID token will
+          be sent in the Authorization header.
         </p>
         <Button onClick={callApi} disabled={isLoadingApi}>
-          {isLoadingApi ? "Loading..." : "Call API"}
+          {isLoadingApi ? "Loading..." : "Record Click"}
         </Button>
 
         {apiResponse && (
           <div>
-            <h3>Success Response:</h3>
+            <h3>Success:</h3>
             <ResponseBox>{apiResponse}</ResponseBox>
           </div>
         )}
