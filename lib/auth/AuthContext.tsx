@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useEffect, useState } from "react";
+import React, { createContext, useCallback, useEffect, useState } from "react";
 import { CognitoUserSession } from "amazon-cognito-identity-js";
 import {
   signIn as cognitoSignIn,
@@ -48,22 +48,12 @@ export const AuthContext = createContext<AuthContextType | undefined>(
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
+  const isConfigured = isCognitoConfigured();
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<CognitoUserSession | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isConfigured] = useState(isCognitoConfigured());
+  const [isLoading, setIsLoading] = useState(isConfigured);
 
-  // Load session on mount
-  useEffect(() => {
-    if (!isConfigured) {
-      setIsLoading(false);
-      return;
-    }
-
-    loadSession();
-  }, [isConfigured]);
-
-  const loadSession = async () => {
+  const loadSession = useCallback(async () => {
     try {
       const currentSession = await getCurrentSession();
       if (currentSession && currentSession.isValid()) {
@@ -76,7 +66,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
+
+  // Load session on mount
+  useEffect(() => {
+    if (!isConfigured) {
+      return;
+    }
+
+    loadSession();
+  }, [isConfigured, loadSession]);
 
   const signIn = async (params: SignInParams) => {
     const newSession = await cognitoSignIn(params);

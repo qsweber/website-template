@@ -1,39 +1,33 @@
-import { FlatCompat } from "@eslint/eslintrc";
-import { dirname } from "node:path";
-import { fileURLToPath } from "node:url";
+import next from "eslint-config-next";
+import prettier from "eslint-plugin-prettier";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-});
-
-export default [
+const eslintConfig = [
+  ...next,
   {
     ignores: [".next/**", "node_modules/**", "out/**"],
   },
-  ...compat.config({
-    env: {
-      browser: true,
-      es2021: true,
+  {
+    files: ["**/*.{js,jsx,ts,tsx,mjs,cjs}"],
+    plugins: {
+      prettier,
     },
-    extends: ["next/core-web-vitals"],
-    parser: "@typescript-eslint/parser",
-    parserOptions: {
-      ecmaVersion: "latest",
-      sourceType: "module",
-    },
-    plugins: ["prettier", "@typescript-eslint"],
     rules: {
       "prettier/prettier": "error",
+      "no-undef": "off",
+      "react-hooks/set-state-in-effect": "off",
+    },
+  },
+  {
+    files: ["**/*.{ts,tsx}"],
+    rules: {
       "@typescript-eslint/no-unused-vars": [
         "warn",
         {
           argsIgnorePattern: "^_",
         },
       ],
-      "no-undef": "off",
     },
-  }),
+  },
 ];
+
+export default eslintConfig;

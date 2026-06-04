@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, Suspense } from "react";
+import React, { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import styled from "@emotion/styled";
 import Link from "next/link";
@@ -36,7 +36,7 @@ const InfoMessage = styled.div(() => ({
 
 function ConfirmPageContent() {
   const searchParams = useSearchParams();
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState<string | null>(null);
   const [code, setCode] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
@@ -45,12 +45,7 @@ function ConfirmPageContent() {
   const router = useRouter();
   const { confirmSignUp, resendConfirmationCode, isConfigured } = useAuth();
 
-  useEffect(() => {
-    const emailParam = searchParams?.get("email");
-    if (emailParam) {
-      setEmail(emailParam);
-    }
-  }, [searchParams]);
+  const resolvedEmail = email ?? searchParams?.get("email") ?? "";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -60,7 +55,7 @@ function ConfirmPageContent() {
     setIsLoading(true);
 
     try {
-      await confirmSignUp({ email, code });
+      await confirmSignUp({ email: resolvedEmail, code });
       setSuccess(true);
       setTimeout(() => {
         router.push("/login");
@@ -82,7 +77,7 @@ function ConfirmPageContent() {
     setIsLoading(true);
 
     try {
-      await resendConfirmationCode(email);
+      await resendConfirmationCode(resolvedEmail);
       setResendSuccess(true);
     } catch (err: unknown) {
       if (err instanceof Error) {
@@ -132,8 +127,10 @@ function ConfirmPageContent() {
           <Input
             id="email"
             type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={resolvedEmail}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setEmail(e.target.value)
+            }
             required
             disabled={isLoading || success}
           />
@@ -144,7 +141,9 @@ function ConfirmPageContent() {
             id="code"
             type="text"
             value={code}
-            onChange={(e) => setCode(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setCode(e.target.value)
+            }
             required
             disabled={isLoading || success}
             placeholder="Enter 6-digit code"
@@ -156,7 +155,7 @@ function ConfirmPageContent() {
         <SecondaryButton
           type="button"
           onClick={handleResendCode}
-          disabled={isLoading || success || !email}
+          disabled={isLoading || success || !resolvedEmail}
         >
           Resend Code
         </SecondaryButton>

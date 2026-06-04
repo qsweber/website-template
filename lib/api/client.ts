@@ -3,17 +3,27 @@
  */
 
 export interface ApiClientConfig {
-  baseUrl: string;
+  baseUrl?: string;
   getIdToken: () => string | null;
 }
 
 export class ApiClient {
-  private baseUrl: string;
+  private baseUrl?: string;
   private getIdToken: () => string | null;
 
   constructor(config: ApiClientConfig) {
     this.baseUrl = config.baseUrl;
     this.getIdToken = config.getIdToken;
+  }
+
+  private getBaseUrl(): string {
+    if (!this.baseUrl) {
+      throw new Error(
+        "NEXT_PUBLIC_API_URL environment variable is not set. It must be defined to configure the API client base URL.",
+      );
+    }
+
+    return this.baseUrl;
   }
 
   /**
@@ -29,7 +39,7 @@ export class ApiClient {
       throw new Error("User is not authenticated");
     }
 
-    const url = `${this.baseUrl}${endpoint}`;
+    const url = `${this.getBaseUrl()}${endpoint}`;
     const headers = new Headers(options.headers);
     headers.set("Authorization", `Bearer ${idToken}`);
 
@@ -63,7 +73,7 @@ export class ApiClient {
     endpoint: string,
     options: RequestInit = {},
   ): Promise<T> {
-    const url = `${this.baseUrl}${endpoint}`;
+    const url = `${this.getBaseUrl()}${endpoint}`;
     const response = await fetch(url, options);
 
     if (!response.ok) {

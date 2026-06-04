@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, Suspense } from "react";
+import React, { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "../../../lib/auth/useAuth";
@@ -22,7 +22,7 @@ import {
 } from "../components/AuthFormComponents";
 
 function ResetPasswordForm() {
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState<string | null>(null);
   const [code, setCode] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -33,12 +33,7 @@ function ResetPasswordForm() {
   const searchParams = useSearchParams();
   const { resetPassword, isConfigured } = useAuth();
 
-  useEffect(() => {
-    const emailParam = searchParams.get("email");
-    if (emailParam) {
-      setEmail(emailParam);
-    }
-  }, [searchParams]);
+  const resolvedEmail = email ?? searchParams.get("email") ?? "";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -59,13 +54,13 @@ function ResetPasswordForm() {
     setIsLoading(true);
 
     try {
-      await resetPassword({ email, code, newPassword });
+      await resetPassword({ email: resolvedEmail, code, newPassword });
       setSuccess(true);
       // Redirect to login after a short delay
       setTimeout(() => {
         router.push("/login");
       }, 2000);
-    } catch (err) {
+    } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Failed to reset password");
     } finally {
       setIsLoading(false);
@@ -98,8 +93,10 @@ function ResetPasswordForm() {
           <Input
             id="email"
             type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={resolvedEmail}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setEmail(e.target.value)
+            }
             required
             disabled={isLoading || success}
           />
@@ -110,7 +107,9 @@ function ResetPasswordForm() {
             id="code"
             type="text"
             value={code}
-            onChange={(e) => setCode(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setCode(e.target.value)
+            }
             required
             disabled={isLoading || success}
             placeholder="Enter code from email"
@@ -123,7 +122,9 @@ function ResetPasswordForm() {
             id="newPassword"
             type="password"
             value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setNewPassword(e.target.value)
+            }
             required
             disabled={isLoading || success}
             minLength={8}
@@ -136,7 +137,9 @@ function ResetPasswordForm() {
             id="confirmPassword"
             type="password"
             value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setConfirmPassword(e.target.value)
+            }
             required
             disabled={isLoading || success}
           />
