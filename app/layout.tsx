@@ -1,16 +1,9 @@
 import { ReactNode } from "react";
-import { Work_Sans } from "next/font/google";
 import "./globals.css";
-
-const workSans = Work_Sans({
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-work-sans",
-});
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className={workSans.variable}>
+    <html lang="en">
       <head>
         <meta charSet="utf-8" />
         <link rel="icon" href="/favicon.ico" />

@@ -100,7 +100,9 @@ export default function SignupPage() {
             id="name"
             type="text"
             value={name}
-            onChange={(e) => setName(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setName(e.target.value)
+            }
             disabled={isLoading || success}
           />
         </FormGroup>
@@ -110,7 +112,9 @@ export default function SignupPage() {
             id="email"
             type="email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setEmail(e.target.value)
+            }
             required
             disabled={isLoading || success}
           />
@@ -121,7 +125,9 @@ export default function SignupPage() {
             id="password"
             type="password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setPassword(e.target.value)
+            }
             required
             disabled={isLoading || success}
             minLength={8}
@@ -134,7 +140,9 @@ export default function SignupPage() {
             id="confirmPassword"
             type="password"
             value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setConfirmPassword(e.target.value)
+            }
             required
             disabled={isLoading || success}
             minLength={8}
