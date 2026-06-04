@@ -30,8 +30,8 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 22
       - run: npm install
@@ -48,8 +48,8 @@ jobs:
       userPoolClientId: ${{ steps.pulumi-outputs.outputs.userPoolClientId }}
       apiUrl: ${{ steps.pulumi-outputs.outputs.apiUrl }}
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 22
       - run: npm install
@@ -81,8 +81,8 @@ jobs:
     runs-on: ubuntu-latest
     needs: [test, infra]
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 22
       - run: npm install

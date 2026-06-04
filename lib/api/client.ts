@@ -57,10 +57,43 @@ export class ApiClient {
   }
 
   /**
-   * GET request
+   * Make an unauthenticated request to the API
+   */
+  private async publicRequest<T>(
+    endpoint: string,
+    options: RequestInit = {},
+  ): Promise<T> {
+    const url = `${this.baseUrl}${endpoint}`;
+    const response = await fetch(url, options);
+
+    if (!response.ok) {
+      throw new Error(
+        `API request failed: ${response.status} ${response.statusText}`,
+      );
+    }
+
+    const contentType = response.headers.get("content-type");
+    if (contentType && contentType.includes("application/json")) {
+      return response.json();
+    }
+
+    return response.text() as T;
+  }
+
+  /**
+   * GET request (authenticated)
    */
   async get<T>(endpoint: string): Promise<T> {
     return this.request<T>(endpoint, {
+      method: "GET",
+    });
+  }
+
+  /**
+   * GET request (unauthenticated)
+   */
+  async publicGet<T>(endpoint: string): Promise<T> {
+    return this.publicRequest<T>(endpoint, {
       method: "GET",
     });
   }
