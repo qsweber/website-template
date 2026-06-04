@@ -46,6 +46,10 @@ The site is fully static with all pages pre-rendered at build time.
 The build is optimized for the best performance.\
 Your app is ready to be deployed!
 
+### `npm run lint`
+
+Runs ESLint across the project using the repository's flat config.
+
 ### `npm start`
 
 Starts the Next.js production server locally.\
