@@ -10,12 +10,15 @@ const compat = new FlatCompat({
 });
 
 export default [
+  {
+    ignores: [".next/**", "node_modules/**", "out/**"],
+  },
   ...compat.config({
     env: {
       browser: true,
       es2021: true,
     },
-    extends: ["eslint:recommended", "next/core-web-vitals"],
+    extends: ["next/core-web-vitals"],
     parser: "@typescript-eslint/parser",
     parserOptions: {
       ecmaVersion: "latest",
