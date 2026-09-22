@@ -13,11 +13,14 @@ A personal website template built with [Next.js](https://nextjs.org/) and config
 
 ## Authentication
 
-This template includes AWS Cognito integration for user authentication. See [COGNITO_SETUP.md](./COGNITO_SETUP.md) for detailed setup instructions.
+This template includes AWS Cognito integration for user authentication. The Cognito user pool
+itself is created and managed by the paired [go-template](https://github.com/qsweber/go-template)
+backend, not by this repo - see [docs/COGNITO_SETUP.md](./docs/COGNITO_SETUP.md) for details.
 
 ### Quick Start for Authentication
 
-1. Deploy infrastructure: `cd infrastructure && pulumi up`
+1. Get the user pool ID and client ID for your environment from `cdk/config/dev.json` or
+   `cdk/config/production.json` in this repo (or from go-template's CDK stack outputs).
 2. Set environment variables in `.env.local`:
    ```
    NEXT_PUBLIC_COGNITO_REGION=us-west-2
@@ -59,7 +62,17 @@ Note: For static hosting, deploy the contents of the `out` folder instead.
 
 This site is configured for static export. After running `npm run build`, the static files will be in the `out` directory.
 
-Pulumi manages the AWS infrastructure for the deployment to S3+Cloudfront.
+AWS CDK (`cdk/`) manages the S3+CloudFront infrastructure for the deployment. To work with it locally:
+
+```bash
+cd cdk
+npm install
+npx cdk diff website-template-dev        # or website-template-production
+npx cdk deploy website-template-dev
+```
+
+CI (`.github/workflows/ci.yml`) runs `cdk deploy`, then syncs the built `out/` directory to S3 and
+invalidates the CloudFront distribution.
 
 ## Learn More
 

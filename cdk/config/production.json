@@ -1,0 +1,11 @@
+{
+  "env": "production",
+  "account": "120356305272",
+  "region": "us-west-2",
+  "bucketName": "template.quinnweber.com",
+  "zoneId": "Z07290422T6PHN4TKVNW0",
+  "certificateArn": "arn:aws:acm:us-east-1:120356305272:certificate/10f59a3f-a08e-4b8d-8a4c-f0a5fcb61e83",
+  "apiUrl": "https://template-api.quinnweber.com/v1",
+  "userPoolId": "us-west-2_dsZPgNnlO",
+  "userPoolClientId": "6b7f3hb8b4r45a2k2qkbcdjmtm"
+}
