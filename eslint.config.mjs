@@ -4,7 +4,7 @@ import prettier from "eslint-plugin-prettier";
 const eslintConfig = [
   ...next,
   {
-    ignores: [".next/**", "node_modules/**", "out/**"],
+    ignores: [".next/**", "node_modules/**", "out/**", "cdk/**"],
   },
   {
     files: ["**/*.{js,jsx,ts,tsx,mjs,cjs}"],
