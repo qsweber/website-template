@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useCallback, useEffect, useState } from "react";
-import { CognitoUserSession } from "amazon-cognito-identity-js";
+import type { AuthSession } from "aws-amplify/auth";
 import {
   signIn as cognitoSignIn,
   signUp as cognitoSignUp,
@@ -26,7 +26,7 @@ interface User {
 
 interface AuthContextType {
   user: User | null;
-  session: CognitoUserSession | null;
+  session: AuthSession | null;
   isAuthenticated: boolean;
   isLoading: boolean;
   isConfigured: boolean;
@@ -50,13 +50,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const isConfigured = isCognitoConfigured();
   const [user, setUser] = useState<User | null>(null);
-  const [session, setSession] = useState<CognitoUserSession | null>(null);
+  const [session, setSession] = useState<AuthSession | null>(null);
   const [isLoading, setIsLoading] = useState(isConfigured);
 
   const loadSession = useCallback(async () => {
     try {
       const currentSession = await getCurrentSession();
-      if (currentSession && currentSession.isValid()) {
+      if (currentSession) {
         setSession(currentSession);
         const currentUser = await getCurrentUser();
         setUser(currentUser);
@@ -113,11 +113,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const getIdToken = (): string | null => {
-    return session?.getIdToken().getJwtToken() ?? null;
+    return session?.tokens?.idToken?.toString() ?? null;
   };
 
   const getAccessToken = (): string | null => {
-    return session?.getAccessToken().getJwtToken() ?? null;
+    return session?.tokens?.accessToken?.toString() ?? null;
   };
 
   const value = {
