@@ -121,6 +121,7 @@ export class WebsiteTemplateStack extends Stack {
     cnameRecord.addDependency(distribution);
 
     new CfnOutput(this, "DistributionId", { value: distribution.ref });
+    new CfnOutput(this, "SiteUrl", { value: `https://${cfg.bucketName}` });
     new CfnOutput(this, "S3BucketUri", { value: `s3://${cfg.bucketName}` });
     new CfnOutput(this, "UserPoolId", { value: cfg.userPoolId });
     new CfnOutput(this, "UserPoolClientId", { value: cfg.userPoolClientId });
