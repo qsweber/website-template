@@ -46,7 +46,9 @@ const Menu = styled.nav<{ $isOpen: boolean }>(({ $isOpen }) => ({
   zIndex: 1000,
 }));
 
-const MenuItem = styled.a<{ $isActive: boolean }>(({ $isActive }) => ({
+const MenuItem = styled(Link, {
+  shouldForwardProp: (prop) => prop !== "$isActive",
+})<{ $isActive: boolean }>(({ $isActive }) => ({
   padding: "12px 20px",
   textDecoration: "none",
   color: "inherit",
@@ -113,28 +115,28 @@ export function NavBar() {
       </HamburgerButton>
       <Menu $isOpen={isMenuOpen}>
         {isAuthenticated && user && <UserEmail>{user.email}</UserEmail>}
-        <Link href="/" passHref legacyBehavior>
-          <MenuItem $isActive={pathname === "/"} onClick={handleMenuItemClick}>
-            Home
-          </MenuItem>
-        </Link>
-        <Link href="/another" passHref legacyBehavior>
+        <MenuItem
+          href="/"
+          $isActive={pathname === "/"}
+          onClick={handleMenuItemClick}
+        >
+          Home
+        </MenuItem>
+        <MenuItem
+          href="/another"
+          $isActive={pathname === "/another/"}
+          onClick={handleMenuItemClick}
+        >
+          Another
+        </MenuItem>
+        {isAuthenticated && (
           <MenuItem
-            $isActive={pathname === "/another/"}
+            href="/protected"
+            $isActive={pathname === "/protected/"}
             onClick={handleMenuItemClick}
           >
-            Another
+            Protected
           </MenuItem>
-        </Link>
-        {isAuthenticated && (
-          <Link href="/protected" passHref legacyBehavior>
-            <MenuItem
-              $isActive={pathname === "/protected/"}
-              onClick={handleMenuItemClick}
-            >
-              Protected
-            </MenuItem>
-          </Link>
         )}
         {!isLoading && (
           <>
@@ -142,14 +144,13 @@ export function NavBar() {
             {isAuthenticated ? (
               <MenuButton onClick={handleLogout}>Logout</MenuButton>
             ) : (
-              <Link href="/login" passHref legacyBehavior>
-                <MenuItem
-                  $isActive={pathname === "/login/"}
-                  onClick={handleMenuItemClick}
-                >
-                  Login
-                </MenuItem>
-              </Link>
+              <MenuItem
+                href="/login"
+                $isActive={pathname === "/login/"}
+                onClick={handleMenuItemClick}
+              >
+                Login
+              </MenuItem>
             )}
           </>
         )}
