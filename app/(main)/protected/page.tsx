@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import styled from "@emotion/styled";
 import { useAuth } from "../../../lib/auth/useAuth";
 import { useApiClient } from "../../../lib/api/useApiClient";
-import type { PasskeyCredential } from "../../../lib/auth/cognito-service";
 
 const Title = styled.h1(() => ({
   marginBottom: 20,
@@ -66,50 +65,8 @@ const ErrorBox = styled.div(() => ({
   color: "#c00",
 }));
 
-const PasskeyList = styled.ul(() => ({
-  listStyle: "none",
-  margin: "15px 0 0",
-  padding: 0,
-}));
-
-const PasskeyItem = styled.li(() => ({
-  display: "flex",
-  justifyContent: "space-between",
-  alignItems: "center",
-  padding: "10px 15px",
-  backgroundColor: "#fff",
-  border: "1px solid #ddd",
-  borderRadius: 5,
-  marginBottom: 10,
-}));
-
-const DeleteButton = styled.button(() => ({
-  padding: "6px 12px",
-  fontSize: 14,
-  backgroundColor: "#fff",
-  color: "#c00",
-  border: "1px solid #c00",
-  borderRadius: 5,
-  cursor: "pointer",
-  "&:hover": {
-    backgroundColor: "#fee",
-  },
-  "&:disabled": {
-    color: "#ccc",
-    borderColor: "#ccc",
-    cursor: "not-allowed",
-  },
-}));
-
 export default function ProtectedPage() {
-  const {
-    isAuthenticated,
-    isLoading,
-    user,
-    registerPasskey,
-    listPasskeys,
-    deletePasskey,
-  } = useAuth();
+  const { isAuthenticated, isLoading, user } = useAuth();
   const router = useRouter();
   const apiClient = useApiClient();
 
@@ -117,67 +74,11 @@ export default function ProtectedPage() {
   const [apiError, setApiError] = useState<string | null>(null);
   const [isLoadingApi, setIsLoadingApi] = useState(false);
 
-  const [passkeys, setPasskeys] = useState<PasskeyCredential[]>([]);
-  const [passkeyError, setPasskeyError] = useState<string | null>(null);
-  const [isRegisteringPasskey, setIsRegisteringPasskey] = useState(false);
-  const [deletingCredentialId, setDeletingCredentialId] = useState<
-    string | null
-  >(null);
-
-  const refreshPasskeys = async () => {
-    try {
-      setPasskeys(await listPasskeys());
-    } catch (error) {
-      setPasskeyError(
-        error instanceof Error ? error.message : "Failed to load passkeys",
-      );
-    }
-  };
-
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
       router.push("/login");
     }
   }, [isAuthenticated, isLoading, router]);
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      refreshPasskeys();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isAuthenticated]);
-
-  const handleRegisterPasskey = async () => {
-    setPasskeyError(null);
-    setIsRegisteringPasskey(true);
-
-    try {
-      await registerPasskey();
-      await refreshPasskeys();
-    } catch (error) {
-      setPasskeyError(
-        error instanceof Error ? error.message : "Failed to register passkey",
-      );
-    } finally {
-      setIsRegisteringPasskey(false);
-    }
-  };
-
-  const handleDeletePasskey = async (credentialId: string) => {
-    setPasskeyError(null);
-    setDeletingCredentialId(credentialId);
-
-    try {
-      await deletePasskey(credentialId);
-      await refreshPasskeys();
-    } catch (error) {
-      setPasskeyError(
-        error instanceof Error ? error.message : "Failed to delete passkey",
-      );
-    } finally {
-      setDeletingCredentialId(null);
-    }
-  };
 
   const callApi = async () => {
     setIsLoadingApi(true);
@@ -240,42 +141,6 @@ export default function ProtectedPage() {
             <h3>Error:</h3>
             <ErrorBox>{apiError}</ErrorBox>
           </div>
-        )}
-      </ApiSection>
-      <ApiSection>
-        <h2>Passkeys</h2>
-        <p>
-          Register a passkey to sign in without a password next time, using your
-          device&apos;s fingerprint, face, or screen lock.
-        </p>
-        <Button onClick={handleRegisterPasskey} disabled={isRegisteringPasskey}>
-          {isRegisteringPasskey
-            ? "Waiting for passkey..."
-            : "Register a passkey"}
-        </Button>
-
-        {passkeyError && <ErrorBox>{passkeyError}</ErrorBox>}
-
-        {passkeys.length > 0 && (
-          <PasskeyList>
-            {passkeys.map((passkey) => (
-              <PasskeyItem key={passkey.credentialId}>
-                <span>
-                  {passkey.friendlyName || "Passkey"}
-                  {passkey.createdAt &&
-                    ` — added ${passkey.createdAt.toLocaleDateString()}`}
-                </span>
-                <DeleteButton
-                  onClick={() => handleDeletePasskey(passkey.credentialId)}
-                  disabled={deletingCredentialId === passkey.credentialId}
-                >
-                  {deletingCredentialId === passkey.credentialId
-                    ? "Removing..."
-                    : "Remove"}
-                </DeleteButton>
-              </PasskeyItem>
-            ))}
-          </PasskeyList>
         )}
       </ApiSection>
     </div>

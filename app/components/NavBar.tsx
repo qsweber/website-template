@@ -138,6 +138,15 @@ export function NavBar() {
             Protected
           </MenuItem>
         )}
+        {isAuthenticated && (
+          <MenuItem
+            href="/profile"
+            $isActive={pathname === "/profile/"}
+            onClick={handleMenuItemClick}
+          >
+            Profile
+          </MenuItem>
+        )}
         {!isLoading && (
           <>
             <MenuDivider />
