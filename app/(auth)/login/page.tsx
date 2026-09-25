@@ -12,6 +12,8 @@ import {
   Label,
   Input,
   Button,
+  SecondaryButton,
+  Divider,
   ErrorMessage,
   LinkText,
   WarningMessage,
@@ -22,8 +24,9 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isPasskeyLoading, setIsPasskeyLoading] = useState(false);
   const router = useRouter();
-  const { signIn, isConfigured } = useAuth();
+  const { signIn, signInWithPasskey, isConfigured } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -48,6 +51,26 @@ export default function LoginPage() {
       }
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handlePasskeySignIn = async () => {
+    setError("");
+    setIsPasskeyLoading(true);
+
+    try {
+      await signInWithPasskey(email);
+      router.push("/");
+    } catch (err: unknown) {
+      if (err instanceof Error && err.name === "UserCancelledException") {
+        // User dismissed the browser's passkey prompt - not an error.
+        return;
+      }
+      setError(
+        "Couldn't sign in with a passkey for that email. Try your password instead, or register a passkey first from the Protected page.",
+      );
+    } finally {
+      setIsPasskeyLoading(false);
     }
   };
 
@@ -82,7 +105,7 @@ export default function LoginPage() {
               setEmail(e.target.value)
             }
             required
-            disabled={isLoading}
+            disabled={isLoading || isPasskeyLoading}
           />
         </FormGroup>
         <FormGroup>
@@ -95,14 +118,22 @@ export default function LoginPage() {
               setPassword(e.target.value)
             }
             required
-            disabled={isLoading}
+            disabled={isLoading || isPasskeyLoading}
             minLength={8}
           />
         </FormGroup>
-        <Button type="submit" disabled={isLoading}>
+        <Button type="submit" disabled={isLoading || isPasskeyLoading}>
           {isLoading ? "Logging in..." : "Login"}
         </Button>
       </Form>
+      <Divider>or</Divider>
+      <SecondaryButton
+        type="button"
+        onClick={handlePasskeySignIn}
+        disabled={!email || isLoading || isPasskeyLoading}
+      >
+        {isPasskeyLoading ? "Waiting for passkey..." : "Sign in with a passkey"}
+      </SecondaryButton>
       <LinkText>
         <Link href="/forgot-password">Forgot password?</Link>
       </LinkText>

@@ -14,6 +14,9 @@ import {
   fetchAuthSession,
   getCurrentUser as amplifyGetCurrentUser,
   fetchUserAttributes,
+  associateWebAuthnCredential,
+  listWebAuthnCredentials,
+  deleteWebAuthnCredential,
   type AuthSession,
 } from "aws-amplify/auth";
 import { configureAmplify } from "./amplify-config";
@@ -89,6 +92,27 @@ export const signIn = async (params: SignInParams): Promise<AuthSession> => {
 };
 
 /**
+ * Sign in a user with a previously-registered passkey instead of a password.
+ * The browser's passkey prompt is triggered as part of this call.
+ */
+export const signInWithPasskey = async (
+  email: string,
+): Promise<AuthSession> => {
+  const result = await amplifySignIn({
+    username: email,
+    options: {
+      authFlowType: "USER_AUTH",
+      preferredChallenge: "WEB_AUTHN",
+    },
+  });
+  if (!result.isSignedIn) {
+    throw new Error(`Sign in did not complete: ${result.nextStep.signInStep}`);
+  }
+
+  return fetchAuthSession();
+};
+
+/**
  * Sign out the current user
  */
 export const signOut = (): void => {
@@ -151,4 +175,41 @@ export const resetPassword = async (
     confirmationCode: code,
     newPassword,
   });
+};
+
+export interface PasskeyCredential {
+  credentialId: string;
+  friendlyName?: string;
+  createdAt?: Date;
+}
+
+/**
+ * Register a passkey for the currently signed-in user. Triggers the
+ * browser's passkey creation prompt. The user must already be
+ * authenticated via another factor (e.g. password) - passkeys can only be
+ * added to an existing account, not used to create one.
+ */
+export const registerPasskey = async (): Promise<void> => {
+  await associateWebAuthnCredential();
+};
+
+/**
+ * List passkeys registered for the currently signed-in user
+ */
+export const listPasskeys = async (): Promise<PasskeyCredential[]> => {
+  const { credentials } = await listWebAuthnCredentials();
+  return credentials
+    .filter((credential) => !!credential.credentialId)
+    .map((credential) => ({
+      credentialId: credential.credentialId as string,
+      friendlyName: credential.friendlyCredentialName,
+      createdAt: credential.createdAt,
+    }));
+};
+
+/**
+ * Delete a passkey registered for the currently signed-in user
+ */
+export const deletePasskey = async (credentialId: string): Promise<void> => {
+  await deleteWebAuthnCredential({ credentialId });
 };
