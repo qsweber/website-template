@@ -16,6 +16,7 @@ const routes = [
   "/forgot-password",
   "/reset-password",
   "/protected",
+  "/profile",
 ];
 
 function collectConsoleErrors(page: Page): string[] {

@@ -4,6 +4,7 @@ import React, { createContext, useCallback, useEffect, useState } from "react";
 import type { AuthSession } from "aws-amplify/auth";
 import {
   signIn as cognitoSignIn,
+  signInWithPasskey as cognitoSignInWithPasskey,
   signUp as cognitoSignUp,
   signOut as cognitoSignOut,
   confirmSignUp as cognitoConfirmSignUp,
@@ -12,11 +13,15 @@ import {
   resendConfirmationCode as cognitoResendCode,
   forgotPassword as cognitoForgotPassword,
   resetPassword as cognitoResetPassword,
+  registerPasskey as cognitoRegisterPasskey,
+  listPasskeys as cognitoListPasskeys,
+  deletePasskey as cognitoDeletePasskey,
   SignInParams,
   SignUpParams,
   ConfirmSignUpParams,
   ForgotPasswordParams,
   ResetPasswordParams,
+  PasskeyCredential,
 } from "./cognito-service";
 import { isCognitoConfigured } from "./cognito-config";
 
@@ -31,12 +36,16 @@ interface AuthContextType {
   isLoading: boolean;
   isConfigured: boolean;
   signIn: (params: SignInParams) => Promise<void>;
+  signInWithPasskey: (email: string) => Promise<void>;
   signUp: (params: SignUpParams) => Promise<void>;
   signOut: () => void;
   confirmSignUp: (params: ConfirmSignUpParams) => Promise<void>;
   resendConfirmationCode: (email: string) => Promise<void>;
   forgotPassword: (params: ForgotPasswordParams) => Promise<void>;
   resetPassword: (params: ResetPasswordParams) => Promise<void>;
+  registerPasskey: () => Promise<void>;
+  listPasskeys: () => Promise<PasskeyCredential[]>;
+  deletePasskey: (credentialId: string) => Promise<void>;
   getIdToken: () => string | null;
   getAccessToken: () => string | null;
 }
@@ -84,6 +93,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     setUser(currentUser);
   };
 
+  const signInWithPasskey = async (email: string) => {
+    const newSession = await cognitoSignInWithPasskey(email);
+    setSession(newSession);
+    const currentUser = await getCurrentUser();
+    setUser(currentUser);
+  };
+
   const signUp = async (params: SignUpParams) => {
     await cognitoSignUp(params);
     // Don't set session until email is confirmed
@@ -112,6 +128,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     await cognitoResetPassword(params);
   };
 
+  const registerPasskey = async () => {
+    await cognitoRegisterPasskey();
+  };
+
+  const listPasskeys = async () => {
+    return cognitoListPasskeys();
+  };
+
+  const deletePasskey = async (credentialId: string) => {
+    await cognitoDeletePasskey(credentialId);
+  };
+
   const getIdToken = (): string | null => {
     return session?.tokens?.idToken?.toString() ?? null;
   };
@@ -127,12 +155,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     isLoading,
     isConfigured,
     signIn,
+    signInWithPasskey,
     signUp,
     signOut,
     confirmSignUp,
     resendConfirmationCode,
     forgotPassword,
     resetPassword,
+    registerPasskey,
+    listPasskeys,
+    deletePasskey,
     getIdToken,
     getAccessToken,
   };

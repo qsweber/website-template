@@ -52,6 +52,45 @@ export const Button = styled.button(() => ({
   },
 }));
 
+export const SecondaryButton = styled.button(() => ({
+  padding: 12,
+  fontSize: 16,
+  fontWeight: "600",
+  backgroundColor: "#fff",
+  color: "#000",
+  border: "1px solid #000",
+  borderRadius: 4,
+  cursor: "pointer",
+  "&:hover": {
+    backgroundColor: "#f5f5f5",
+  },
+  "&:disabled": {
+    color: "#ccc",
+    borderColor: "#ccc",
+    cursor: "not-allowed",
+  },
+}));
+
+export const Divider = styled.div(() => ({
+  display: "flex",
+  alignItems: "center",
+  textAlign: "center",
+  color: "#666",
+  fontSize: 14,
+  margin: "4px 0",
+  "&::before, &::after": {
+    content: '""',
+    flex: 1,
+    borderBottom: "1px solid #ddd",
+  },
+  "&::before": {
+    marginRight: 10,
+  },
+  "&::after": {
+    marginLeft: 10,
+  },
+}));
+
 export const ErrorMessage = styled.div(() => ({
   color: "red",
   textAlign: "center",
