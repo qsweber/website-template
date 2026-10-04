@@ -10,6 +10,16 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
+  // @qsweber/auth-kit ships raw TS/TSX source rather than a prebuilt dist,
+  // so Next's own compiler is the only thing that ever compiles its
+  // Emotion styled-components (consistent with this app's own).
+  transpilePackages: ["@qsweber/auth-kit"],
+  // Gives every styled() call a stable, source-location-based class label
+  // instead of relying on Emotion's default anonymous-component behavior.
+  compiler: {
+    emotion: true,
+  },
+  productionBrowserSourceMaps: true,
 };
 
 module.exports = nextConfig;

@@ -3,7 +3,8 @@
 import { ReactNode } from "react";
 import styled from "@emotion/styled";
 import { NavBar } from "../components/NavBar";
-import { AuthProvider } from "../../lib/auth/AuthContext";
+import { AuthProvider } from "@qsweber/auth-kit";
+import "../../lib/auth-setup";
 
 const Container = styled.div(() => ({
   maxWidth: 1000,
