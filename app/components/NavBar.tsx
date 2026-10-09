@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import styled from "@emotion/styled";
-import { useAuth } from "../../lib/auth/useAuth";
+import { useAuth } from "@qsweber/auth-kit";
 
 const NavBarWrapper = styled.div(() => ({
   display: "flex",
@@ -93,7 +93,19 @@ const UserEmail = styled.div(() => ({
 
 export function NavBar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const pathname = usePathname();
+  const rawPathname = usePathname();
+  // Normalized so active-link styling is correct whether or not the current
+  // URL has a trailing slash. Next's static generation always treats paths
+  // as canonical with a trailing slash (per trailingSlash: true), but a
+  // visitor can land on the bare path (no redirect enforces the canonical
+  // form), and usePathname() then reflects whatever's actually in the
+  // address bar - without normalizing, that mismatch between the
+  // server-rendered class and the client-computed one is a real hydration
+  // error, not just a test artifact.
+  const pathname =
+    rawPathname && rawPathname !== "/" && rawPathname.endsWith("/")
+      ? rawPathname.slice(0, -1)
+      : rawPathname;
   const router = useRouter();
   const { isAuthenticated, user, signOut, isLoading } = useAuth();
 
@@ -124,7 +136,7 @@ export function NavBar() {
         </MenuItem>
         <MenuItem
           href="/another"
-          $isActive={pathname === "/another/"}
+          $isActive={pathname === "/another"}
           onClick={handleMenuItemClick}
         >
           Another
@@ -132,10 +144,19 @@ export function NavBar() {
         {isAuthenticated && (
           <MenuItem
             href="/protected"
-            $isActive={pathname === "/protected/"}
+            $isActive={pathname === "/protected"}
             onClick={handleMenuItemClick}
           >
             Protected
+          </MenuItem>
+        )}
+        {isAuthenticated && (
+          <MenuItem
+            href="/profile"
+            $isActive={pathname === "/profile"}
+            onClick={handleMenuItemClick}
+          >
+            Profile
           </MenuItem>
         )}
         {!isLoading && (
@@ -146,7 +167,7 @@ export function NavBar() {
             ) : (
               <MenuItem
                 href="/login"
-                $isActive={pathname === "/login/"}
+                $isActive={pathname === "/login"}
                 onClick={handleMenuItemClick}
               >
                 Login
