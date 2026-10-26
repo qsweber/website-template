@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import styled from "@emotion/styled";
 import { useRequireAuth } from "@qsweber/auth-kit";
 import { useApiClient } from "../../../lib/api/useApiClient";
+import { getUser, useUserId } from "../../../lib/api/user";
 
 const Title = styled.h1(() => ({
   marginBottom: 20,
@@ -67,6 +68,7 @@ const ErrorBox = styled.div(() => ({
 export default function ProtectedPage() {
   const { isAuthenticated, isLoading, user } = useRequireAuth();
   const apiClient = useApiClient();
+  const userId = useUserId();
 
   const [apiResponse, setApiResponse] = useState<string | null>(null);
   const [apiError, setApiError] = useState<string | null>(null);
@@ -78,8 +80,11 @@ export default function ProtectedPage() {
     setApiResponse(null);
 
     try {
-      await apiClient.post("/record-click");
-      setApiResponse("Click recorded successfully!");
+      if (!userId) {
+        throw new Error("User is not authenticated");
+      }
+      const userProfile = await getUser(apiClient, userId);
+      setApiResponse(JSON.stringify(userProfile, null, 2));
     } catch (error) {
       setApiError(error instanceof Error ? error.message : "Unknown error");
     } finally {
@@ -114,11 +119,11 @@ export default function ProtectedPage() {
       <ApiSection>
         <h2>Authenticated API Call Example</h2>
         <p>
-          Click the button below to record a click. Your Cognito ID token will
-          be sent in the Authorization header.
+          Click the button below to fetch your user record from the API. Your
+          Cognito ID token will be sent in the Authorization header.
         </p>
         <Button onClick={callApi} disabled={isLoadingApi}>
-          {isLoadingApi ? "Loading..." : "Record Click"}
+          {isLoadingApi ? "Loading..." : "Fetch My User"}
         </Button>
 
         {apiResponse && (
