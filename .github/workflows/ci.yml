@@ -194,5 +194,5 @@ jobs:
             echo "OK: $SITE_URL$path contains '$expect'"
           }
 
-          check "/" "Total clicks"
+          check "/" "This is a basic react template."
           check "/login/" "<form"
