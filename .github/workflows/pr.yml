@@ -4,6 +4,10 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   ci:
     uses: ./.github/workflows/ci.yml
@@ -12,8 +16,6 @@ jobs:
       environment: dev
       run-deploy: true
     secrets:
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       GH_PACKAGES_TOKEN: ${{ secrets.GH_PACKAGES_TOKEN }}
 
   production-preview:
@@ -24,9 +26,9 @@ jobs:
       - uses: actions/setup-node@v7
         with:
           node-version: 22
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::120356305272:role/github-actions-deploy
+          aws-region: us-west-2
       - run: cd cdk && npm ci
       - run: cd cdk && npx cdk diff website-template-production
-    env:
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      AWS_REGION: "us-west-2"

@@ -4,6 +4,10 @@ on:
   push:
     branches: [main]
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   ci:
     uses: ./.github/workflows/ci.yml
@@ -12,13 +16,13 @@ jobs:
       environment: production
       run-deploy: true
     secrets:
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       GH_PACKAGES_TOKEN: ${{ secrets.GH_PACKAGES_TOKEN }}
 
   release:
     runs-on: ubuntu-latest
     needs: [ci]
+    permissions:
+      contents: write # create the GitHub release
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v7
